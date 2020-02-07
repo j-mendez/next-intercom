@@ -54,7 +54,7 @@ function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
       function loadScript() {
         var intercomScript = document.createElement("script");
         intercomScript.type = "text/javascript";
-        intercomScript.async = "true";
+        intercomScript.defer = "true";
         intercomScript.src = `https://widget.intercom.io/widget/${appId ||
           APP_ID}`;
         var initialScript = document.getElementsByTagName("script")[0];
@@ -64,7 +64,17 @@ function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
         }
       }
 
-      window.onload = loadScript();
+      // window.onload = loadScript();
+
+      if (
+        typeof document !== "undefined" &&
+        document.readyState &&
+        document.readyState === "complete"
+      ) {
+        loadScript();
+      } else {
+        window.addEventListener("DOMContentLoaded", loadScript);
+      }
     } else {
       if (console && typeof console.warn === "function") {
         console.warn("ISSUE: loading intercom");
