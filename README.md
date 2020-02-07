@@ -17,7 +17,10 @@ const { loadIntercom, initIntercomWindow } = require("intercom-next");
 // first init the window top level
 initIntercomWindow({ appId: "myintercomappid" });
 
-// once your page inits top level or contructor of your components. Both props are optional. If you established your appId you can still pass it in below.
+/* 
+  once your page inits top level or contructor of your components. 
+  Both props are optional. If you have not established your appId do so now.
+*/
 loadIntercom({ appId: "myintercomappid", ssr: false });
 ```
 
@@ -26,7 +29,7 @@ example using on the server
 ```typescript
 const { createIntercomSSR } = require("intercom-next");
 
-// first init the window top level if you want or pass in the appId in the query like below: example in nodejs
+// Optiobal appId property unless app was not established: example in nodejs
 createIntercomSSR({ appId: "myintercomappid" });
 
 app.get("/intercom", (req, res) =>
