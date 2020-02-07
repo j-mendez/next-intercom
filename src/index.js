@@ -52,26 +52,32 @@ function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
       window.Intercom = intercomeBase;
 
       function loadScript() {
-        var intercomScript = document.createElement("script");
-        intercomScript.type = "text/javascript";
-        intercomScript.defer = "true";
-        intercomScript.src = `https://widget.intercom.io/widget/${appId ||
-          APP_ID}`;
-        var initialScript = document.getElementsByTagName("script")[0];
+        var intercomLoaded = document.querySelector(
+          `script[src="${`https://widget.intercom.io/widget/${appId ||
+            APP_ID}`}"]`
+        );
 
-        if (initialScript) {
-          initialScript.parentNode.insertBefore(intercomScript, initialScript);
+        if (!intercomLoaded) {
+          var intercomScript = document.createElement("script");
+          intercomScript.type = "text/javascript";
+          intercomScript.defer = "true";
+          intercomScript.src = `https://widget.intercom.io/widget/${appId ||
+            APP_ID}`;
+          var initialScript = document.getElementsByTagName("script")[0];
+
+          if (initialScript) {
+            initialScript.parentNode.insertBefore(
+              intercomScript,
+              initialScript
+            );
+          }
+        } else {
+          console.log("intercom script already inserted");
         }
       }
 
-      if (
-        typeof document !== "undefined" &&
-        document.readyState &&
-        document.readyState === "complete"
-      ) {
+      if (typeof document !== "undefined") {
         loadScript();
-      } else if (window.addEventListener) {
-        window.addEventListener("DOMContentLoaded", loadScript);
       }
     } else {
       if (console && typeof console.warn === "function") {
