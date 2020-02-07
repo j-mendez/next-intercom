@@ -17,7 +17,7 @@ const { loadIntercom, initIntercomWindow } = require("intercom-next");
 // first init the window top level
 initIntercomWindow({ appId: "myintercomappid" });
 
-// once your page inits top level or contructor
+// once your page inits top level or contructor of your components. Both props are optional. If you established your appId you can still pass it in below.
 loadIntercom({ appId: "myintercomappid", ssr: false });
 ```
 
