@@ -1,6 +1,6 @@
 # Intercom-Next
 
-create intercom chat composer in any browser or on the server using javascript. Persist messager across all pages with SSR capabilities. Easy drop in for Next.js
+create intercom chat composer in any browser or on the server using javascript. Keep messager up across SSR pages. Easy drop in for Next.js
 
 ## Installation
 

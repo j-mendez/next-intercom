@@ -64,15 +64,13 @@ function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
         }
       }
 
-      // window.onload = loadScript();
-
       if (
         typeof document !== "undefined" &&
         document.readyState &&
         document.readyState === "complete"
       ) {
         loadScript();
-      } else {
+      } else if (window.addEventListener) {
         window.addEventListener("DOMContentLoaded", loadScript);
       }
     } else {
