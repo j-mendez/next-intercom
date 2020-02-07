@@ -42,7 +42,7 @@ app.get("/intercom", (req, res) =>
 Or use in a fetch like manner if needed from the server or clientside. This returns the script for intercom inline for usage.
 
 ```typescript
-const { createIntercomSSR } = require("intercom-js");
+const { createIntercomSSR } = require("intercom-next");
 
 async function fetchIframe() {
   const intercomScript = await createIntercomSSR(appId);
@@ -56,7 +56,7 @@ Screenshot above is an example image of the package used at [A11ywatch](https://
 
 ## About
 
-Simply get started with intercom in your app using javascript
+Simply get started with intercom in your app using javascript.
 
 ## Methods
 
@@ -69,3 +69,5 @@ The intercom constructor using window.Intercom('method')
 ## TODO
 
 Add typescript for better editor support etc.
+
+1. check if script exist if used SSR and on client to prevent dups
