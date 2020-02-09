@@ -32,7 +32,9 @@ async function createIntercomSSR(appId) {
   }
 }
 
-function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
+function loadIntercom(
+  { appId, ssr, callBack } = { appId: APP_ID, ssr: false }
+) {
   setAppId(appId);
   if (ssr) {
     return createIntercomSSR(appId);
@@ -60,7 +62,7 @@ function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
         if (!intercomLoaded) {
           var intercomScript = document.createElement("script");
           intercomScript.type = "text/javascript";
-          intercomScript.defer = "true";
+          intercomScript.async = "true";
           intercomScript.src = `https://widget.intercom.io/widget/${appId ||
             APP_ID}`;
           var initialScript = document.getElementsByTagName("script")[0];
@@ -70,6 +72,10 @@ function loadIntercom({ appId, ssr } = { appId: APP_ID, ssr: false }) {
               intercomScript,
               initialScript
             );
+          }
+
+          if (typeof callBack === "function") {
+            callBack();
           }
         } else {
           console.log("intercom script already inserted");
