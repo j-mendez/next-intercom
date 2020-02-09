@@ -32,12 +32,22 @@ async function createIntercomSSR(appId) {
   }
 }
 
-function loadIntercom(
-  { appId, ssr, callBack } = { appId: APP_ID, ssr: false }
-) {
+function loadIntercom({
+  appId = APP_ID,
+  ssr = false,
+  callBack,
+  delay = 0,
+  email,
+  name,
+  initWindow = true,
+  scriptType = "async",
+  scriptInitDelay = 0
+}) {
   setAppId(appId);
   if (ssr) {
-    return createIntercomSSR(appId);
+    const ssrIntercomScript = createIntercomSSR(appId);
+
+    return ssrIntercomScript;
   } else if (typeof window !== "undefined") {
     if (typeof window.Intercom === "function") {
       updateIntercom("reattach_activator");
@@ -62,7 +72,11 @@ function loadIntercom(
         if (!intercomLoaded) {
           var intercomScript = document.createElement("script");
           intercomScript.type = "text/javascript";
-          intercomScript.async = "true";
+
+          // set scriptType to null for no async/defer
+          if (scriptType) {
+            intercomScript[scriptType] = "true";
+          }
           intercomScript.src = `https://widget.intercom.io/widget/${appId ||
             APP_ID}`;
           var initialScript = document.getElementsByTagName("script")[0];
@@ -77,13 +91,25 @@ function loadIntercom(
           if (typeof callBack === "function") {
             callBack();
           }
+
+          if (initWindow) {
+            if (delay && typeof delay === "number") {
+              setTimeout(() => initIntercomWindow({ email, appId }), delay);
+            } else {
+              initIntercomWindow({ email, appId });
+            }
+          }
         } else {
           console.log("intercom script already inserted");
         }
       }
 
       if (typeof document !== "undefined") {
-        loadScript();
+        if (scriptInitDelay && typeof scriptInitDelay === "number") {
+          setTimeout(loadScript, scriptInitDelay);
+        } else {
+          loadScript();
+        }
       }
     } else {
       if (console && typeof console.warn === "function") {
@@ -93,13 +119,13 @@ function loadIntercom(
   }
 }
 
-function initIntercomWindow({ email, appId } = { email: null, appId: APP_ID }) {
+function initIntercomWindow({ email = null, appId = APP_ID }) {
   setAppId(appId);
   if (typeof window !== "undefined" && window.Intercom) {
     if (window.intercomSettings && !window.intercomSettings.app_id) {
       window.intercomSettings = {
         app_id: appId || APP_ID,
-        name: email || "User",
+        name: name || "User",
         email: email || undefined
       };
     }

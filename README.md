@@ -1,6 +1,7 @@
 # Intercom-Next
 
 create intercom chat composer in any browser or on the server using javascript. Keep messager up across SSR pages. Easy drop in for Next.js
+Extra configuration for priority adjustments to keep the main thread unblocked.
 
 ## Installation
 
@@ -14,14 +15,19 @@ If your using Next.js you can simply just add the `process.browser` for ssr to r
 ```typescript
 const { loadIntercom, initIntercomWindow } = require("intercom-next");
 
-// first init the window top level
-initIntercomWindow({ appId: "myintercomappid" });
-
 /* 
-  once your page inits top level or contructor of your components. 
-  Both props are optional. If you have not established your appId do so now.
+  Generate the intercom script and load the composer
 */
-loadIntercom({ appId: "myintercomappid", ssr: false });
+loadIntercom({
+  appId: "myintercomappid", // default : ''
+  email: "someEmail@gmail.com", //default: ''
+  ssr: false, // default: false
+  initWindow: true, // default: true
+  delay: 0 // default: 0  - usefull for mobile devices to prevent blocking the main thread
+});
+
+// If init was set to false initiate the window when needed
+initIntercomWindow({ appId: "myintercomappid", email: "someEmail@gmail.com" });
 ```
 
 example using on the server
@@ -30,7 +36,7 @@ example using on the server
 const { createIntercomSSR } = require("intercom-next");
 
 // Optiobal appId property unless app was not established: example in nodejs
-createIntercomSSR({ appId: "myintercomappid" });
+createIntercomSSR({ appId: "myintercomappid", email: "someEmail@gmail.com" });
 
 app.get("/intercom", (req, res) =>
   createIntercomSSR({
@@ -65,6 +71,10 @@ The intercom constructor using window.Intercom('method')
 1. boot
 2. reattach_activator
 3. update
+
+## Props
+
+1. email is always optional across utils.
 
 ## TODO
 
