@@ -119,14 +119,14 @@ function loadIntercom({
   }
 }
 
-function initIntercomWindow({ email = null, appId = APP_ID }) {
+function initIntercomWindow({ email, name, appId = APP_ID }) {
   setAppId(appId);
   if (typeof window !== "undefined" && window.Intercom) {
     if (window.intercomSettings && !window.intercomSettings.app_id) {
       window.intercomSettings = {
         app_id: appId || APP_ID,
-        name: name || "User",
-        email: email || undefined
+        name,
+        email
       };
     }
 
