@@ -33,7 +33,7 @@ async function createIntercomSSR(appId) {
 }
 
 function loadIntercom({
-  appId = APP_ID,
+  appId,
   ssr = false,
   callBack,
   delay = 0,
@@ -44,6 +44,8 @@ function loadIntercom({
   scriptInitDelay = 0
 }) {
   setAppId(appId);
+  const app_id = appId || APP_ID;
+
   if (ssr) {
     const ssrIntercomScript = createIntercomSSR(appId);
 
@@ -65,8 +67,7 @@ function loadIntercom({
 
       function loadScript() {
         var intercomLoaded = document.querySelector(
-          `script[src="${`https://widget.intercom.io/widget/${appId ||
-            APP_ID}`}"]`
+          `script[src="${`https://widget.intercom.io/widget/${app_id}`}"]`
         );
 
         if (!intercomLoaded) {
@@ -77,8 +78,7 @@ function loadIntercom({
           if (scriptType) {
             intercomScript[scriptType] = "true";
           }
-          intercomScript.src = `https://widget.intercom.io/widget/${appId ||
-            APP_ID}`;
+          intercomScript.src = `https://widget.intercom.io/widget/${app_id}`;
           var initialScript = document.getElementsByTagName("script")[0];
 
           if (initialScript) {
@@ -94,9 +94,12 @@ function loadIntercom({
 
           if (initWindow) {
             if (delay && typeof delay === "number") {
-              setTimeout(() => initIntercomWindow({ email, appId }), delay);
+              setTimeout(
+                () => initIntercomWindow({ email, appId, name }),
+                delay
+              );
             } else {
-              initIntercomWindow({ email, appId });
+              initIntercomWindow({ email, appId, name });
             }
           }
         } else {
@@ -119,19 +122,21 @@ function loadIntercom({
   }
 }
 
-function initIntercomWindow({ email, name, appId = APP_ID }) {
+function initIntercomWindow({ email, name, appId }) {
   setAppId(appId);
+  const app_id = appId || APP_ID;
+
   if (typeof window !== "undefined" && window.Intercom) {
     if (window.intercomSettings && !window.intercomSettings.app_id) {
       window.intercomSettings = {
-        app_id: appId || APP_ID,
+        app_id,
         name,
         email
       };
     }
 
     window.Intercom("boot", {
-      app_id: appId || APP_ID
+      app_id
     });
   }
 }
