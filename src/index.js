@@ -2,19 +2,19 @@
 
 var APP_ID = "";
 
-function setAppId(id) {
+function setAppId (id) {
   if (id) {
     APP_ID = id;
   }
 }
 
-function updateIntercom(event = "update", settings) {
+function updateIntercom (event = "update", settings) {
   if (typeof window !== "undefined" && window.Intercom) {
     window.Intercom("update", settings);
   }
 }
 
-async function createIntercomSSR(appId) {
+async function createIntercomSSR (appId) {
   try {
     var dataSource = await fetch(
       `https://widget.intercom.io/widget/${appId || APP_ID}`
@@ -32,7 +32,7 @@ async function createIntercomSSR(appId) {
   }
 }
 
-function loadIntercom({
+function loadIntercom ({
   appId,
   ssr = false,
   callBack,
@@ -42,7 +42,7 @@ function loadIntercom({
   initWindow = true,
   scriptType = "async",
   scriptInitDelay = 0,
-  ...extra,
+  ...extra
 }) {
   setAppId(appId);
   const app_id = appId || APP_ID;
@@ -56,17 +56,17 @@ function loadIntercom({
       updateIntercom("reattach_activator");
       updateIntercom("update", window.intercomSettings);
     } else if (typeof document !== "undefined") {
-      var intercomeBase = function() {
+      var intercomeBase = function () {
         intercomeBase.c(arguments);
       };
       intercomeBase.q = [];
-      intercomeBase.c = function(args) {
+      intercomeBase.c = function (args) {
         intercomeBase.q.push(args);
       };
 
       window.Intercom = intercomeBase;
 
-      function loadScript() {
+      function loadScript () {
         var intercomLoaded = document.querySelector(
           `script[src="${`https://widget.intercom.io/widget/${app_id}`}"]`
         );
@@ -98,7 +98,7 @@ function loadIntercom({
               email,
               appId,
               name,
-              ...extra,
+              ...extra
             };
 
             if (delay && typeof delay === "number") {
@@ -130,12 +130,12 @@ function loadIntercom({
   }
 }
 
-function initIntercomWindow({ appId, ...otherProps }) {
+function initIntercomWindow ({ appId, ...otherProps }) {
   setAppId(appId);
   const app_id = appId || APP_ID;
   const intercomProps = {
     app_id,
-    ...otherProps,
+    ...otherProps
   };
 
   if (typeof window !== "undefined" && window.Intercom) {
@@ -147,7 +147,7 @@ function initIntercomWindow({ appId, ...otherProps }) {
   }
 }
 
-function shutdownIntercom() {
+function shutdownIntercom () {
   if (typeof window !== "undefined" && window.Intercom) {
     window.Intercom("shutdown");
     delete window.Intercom;
