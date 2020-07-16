@@ -147,10 +147,19 @@ function initIntercomWindow({ appId, ...otherProps }) {
   }
 }
 
+function shutdownIntercom() {
+  if (typeof window !== "undefined" && window.Intercom) {
+    window.Intercom("shutdown");
+    delete window.Intercom;
+    delete window.intercomSettings;
+  }
+}
+
 module.exports = {
   updateIntercom,
   createIntercomSSR,
   setAppId,
   loadIntercom,
-  initIntercomWindow
+  initIntercomWindow,
+  shutdownIntercom,
 };
