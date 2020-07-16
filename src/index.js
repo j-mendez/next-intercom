@@ -41,7 +41,8 @@ function loadIntercom({
   name,
   initWindow = true,
   scriptType = "async",
-  scriptInitDelay = 0
+  scriptInitDelay = 0,
+  ...extra,
 }) {
   setAppId(appId);
   const app_id = appId || APP_ID;
@@ -93,13 +94,20 @@ function loadIntercom({
           }
 
           if (initWindow) {
+            const intercomProps = {
+              email,
+              appId,
+              name,
+              ...extra,
+            };
+
             if (delay && typeof delay === "number") {
               setTimeout(
-                () => initIntercomWindow({ email, appId, name }),
+                () => initIntercomWindow(intercomProps),
                 delay
               );
             } else {
-              initIntercomWindow({ email, appId, name });
+              initIntercomWindow(intercomProps);
             }
           }
         } else {
@@ -122,22 +130,20 @@ function loadIntercom({
   }
 }
 
-function initIntercomWindow({ email, name, appId }) {
+function initIntercomWindow({ appId, ...otherProps }) {
   setAppId(appId);
   const app_id = appId || APP_ID;
+  const intercomProps = {
+    app_id,
+    ...otherProps,
+  };
 
   if (typeof window !== "undefined" && window.Intercom) {
     if (window.intercomSettings && !window.intercomSettings.app_id) {
-      window.intercomSettings = {
-        app_id,
-        name,
-        email
-      };
+      window.intercomSettings = intercomProps;
     }
 
-    window.Intercom("boot", {
-      app_id
-    });
+    window.Intercom("boot", intercomProps);
   }
 }
 
