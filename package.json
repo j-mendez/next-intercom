@@ -1,6 +1,6 @@
 {
-  "name": "intercom-next",
-  "version": "1.3.5",
+  "name": "next-intercom",
+  "version": "0.0.1",
   "description": "create intercom composer with 0 dependencies on the client or on the server.",
   "main": "dist/index.js",
   "scripts": {

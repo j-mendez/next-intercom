@@ -1,11 +1,11 @@
-# Intercom-Next
+# next-intercom
 
 create intercom chat composer in any browser or on the server using javascript. Keep messager up across SSR pages. Easy drop in for Next.js
 Extra configuration for priority adjustments to keep the main thread unblocked.
 
 ## Installation
 
-`yarn install intercom-next`
+`yarn install next-intercom`
 
 ## How to use
 
@@ -13,7 +13,7 @@ On the client or you can use the script on the server like Next.js using the ssr
 If your using Next.js you can simply just add the `process.browser` for ssr to render intercom SSR and have it loaded initally.
 
 ```typescript
-const { loadIntercom, initIntercomWindow } = require("intercom-next");
+const { loadIntercom, initIntercomWindow } = require("next-intercom");
 
 /* 
   Generate the intercom script and load the composer
@@ -34,11 +34,9 @@ initIntercomWindow({ appId: "myintercomappid", email: "someEmail@gmail.com" });
 example using on the server
 
 ```typescript
-const { createIntercomSSR } = require("intercom-next");
+const { createIntercomSSR } = require("next-intercom");
 
 // Optiobal appId property unless app was not established: example in nodejs, make sure to globally set fetch to your request type like axios etc
-createIntercomSSR({ appId: "myintercomappid", email: "someEmail@gmail.com" });
-
 app.get("/intercom", (req, res) =>
   createIntercomSSR({
     appId: req.query.appId,
@@ -49,7 +47,7 @@ app.get("/intercom", (req, res) =>
 Or use in a fetch like manner if needed from the server or clientside. This returns the script for intercom inline for usage.
 
 ```typescript
-const { createIntercomSSR } = require("intercom-next");
+const { createIntercomSSR } = require("next-intercom");
 
 async function fetchIframe() {
   const intercomScript = await createIntercomSSR(appId);
@@ -60,7 +58,7 @@ async function fetchIframe() {
 Stop intercom and close composer.
 
 ```typescript
-const { shutdownIntercom } = require("intercom-next");
+const { shutdownIntercom } = require("next-intercom");
 
 shutdownIntercom();
 ```
