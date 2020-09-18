@@ -4,7 +4,7 @@ declare global {
         intercomSettings: any;
     }
 }
-declare type ScriptType = "defer" | "async";
+declare type ScriptType = 'defer' | 'async';
 interface IntercomProps {
     [x: string]: any;
     appId?: string;
