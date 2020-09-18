@@ -35,7 +35,7 @@ function setAppId(id: string) {
 
 function updateIntercom(event: string = 'update', settings: any = null) {
   if (typeof window !== 'undefined' && window.Intercom) {
-    window.Intercom('update', settings);
+    window.Intercom(event, settings);
   }
 }
 
