@@ -63,6 +63,19 @@ const { shutdownIntercom } = require("next-intercom");
 shutdownIntercom();
 ```
 
+Track an Intercom event.
+
+```typescript
+const { trackEvent } = require("next-intercom");
+
+var metadata = {
+  invitee_email: 'pi@example.org',
+  invite_code: 'ADDAFRIEND'
+};
+
+trackEvent('invited-friend', metadata)
+```
+
 ## About
 
 Simply get started with intercom in your app using javascript.
