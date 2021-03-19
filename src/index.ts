@@ -39,6 +39,12 @@ function updateIntercom(event: string = 'update', settings: any = null) {
   }
 }
 
+function trackEvent(type: string, metadata: any = null) {
+  if (typeof window !== 'undefined' && window.Intercom) {
+    window.Intercom('trackEvent', type, metadata);
+  }
+}
+
 async function createIntercomSSR(appId: string = APP_ID) {
   try {
     const dataSource = await fetch(
@@ -177,6 +183,7 @@ function shutdownIntercom(): void {
 
 export {
   updateIntercom,
+  trackEvent,
   createIntercomSSR,
   setAppId,
   loadIntercom,
