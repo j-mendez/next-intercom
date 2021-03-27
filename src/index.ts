@@ -4,26 +4,23 @@ import type { IntercomProps, ScriptType } from "./types"
 
 let APP_ID = ""
 const widgetCdn = "https://widget.intercom.io/widget/"
+const hasIntercom = () => typeof window !== "undefined" && window.Intercom
 
-function setAppId(id: string) {
+function setAppId(id: string): void {
   if (id) {
     APP_ID = id
   }
 }
 
-function updateIntercom(event: string = "update", settings: any = null) {
-  if (typeof window !== "undefined" && window.Intercom) {
-    window.Intercom(event, settings)
-  }
+function updateIntercom(event: string = "update", settings: any = null): void {
+  hasIntercom() && window.Intercom(event, settings)
 }
 
-function trackEvent(type: string, metadata: any = null) {
-  if (typeof window !== "undefined" && window.Intercom) {
-    window.Intercom("trackEvent", type, metadata)
-  }
+function trackEvent(type: string, metadata: any = null): void {
+  hasIntercom() && window.Intercom("trackEvent", type, metadata)
 }
 
-async function createIntercomSSR(appId: string = APP_ID) {
+async function createIntercomSSR(appId: string = APP_ID): Promise<string> {
   try {
     const dataSource = await fetch(`${widgetCdn}${appId}`)
     const scriptBody = await dataSource.text()
@@ -122,7 +119,7 @@ function initIntercomWindow({ appId = APP_ID, ...otherProps }): void {
     otherProps
   )
 
-  if (typeof window !== "undefined" && window.Intercom) {
+  if (hasIntercom()) {
     if (window.intercomSettings && !window.intercomSettings.app_id) {
       window.intercomSettings = intercomProps
     }
@@ -132,13 +129,11 @@ function initIntercomWindow({ appId = APP_ID, ...otherProps }): void {
 }
 
 function showIntercomWindow(): void {
-  if (typeof window !== "undefined" && window.Intercom) {
-    window.Intercom("show")
-  }
+  hasIntercom() && window.Intercom("show")
 }
 
 function shutdownIntercom(): void {
-  if (typeof window !== "undefined" && window.Intercom) {
+  if (hasIntercom()) {
     window.Intercom("shutdown")
     delete window.Intercom
     delete window.intercomSettings
@@ -152,6 +147,7 @@ export {
   setAppId,
   loadIntercom,
   initIntercomWindow,
+  showIntercomWindow,
   shutdownIntercom,
   APP_ID
 }
