@@ -1,2 +1,6 @@
 README.md
 src
+coverage
+tsconfig.json
+__tests__
+.circleci
