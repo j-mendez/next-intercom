@@ -1,7 +1,7 @@
 {
   "name": "next-intercom",
-  "version": "0.1.0",
-  "description": "create intercom composer with 0 dependencies on the client or on the server.",
+  "version": "0.1.1",
+  "description": "create intercom composer with 0 dependencies on the client or server.",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",

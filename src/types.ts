@@ -21,3 +21,11 @@ export interface IntercomProps {
   scriptType?: ScriptType
   scriptInitDelay?: number
 }
+
+export type IntercomLoad = {
+  src: string
+  callBack?(param?: any): any
+  initWindow?: boolean
+  initIntercomWindow: (props?: any) => void
+  scriptType?: ScriptType
+}

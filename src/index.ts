@@ -1,10 +1,9 @@
-"use strict"
-
 import type { IntercomProps, ScriptType } from "./types"
+import { loadScript } from "./load-script"
+import { hasIntercom } from "./has-intercom"
 
 let APP_ID = ""
 const widgetCdn = "https://widget.intercom.io/widget/"
-const hasIntercom = () => typeof window !== "undefined" && window.Intercom
 
 function setAppId(id: string): void {
   if (id) {
@@ -32,15 +31,28 @@ async function createIntercomSSR(appId: string = APP_ID): Promise<string> {
   }
 }
 
+function initIntercomWindow({ appId = APP_ID, ...otherProps }): void {
+  const intercomProps = Object.assign(
+    {},
+    {
+      app_id: appId
+    },
+    otherProps
+  )
+
+  if (hasIntercom()) {
+    if (window.intercomSettings && !window.intercomSettings.app_id) {
+      window.intercomSettings = intercomProps
+    }
+
+    window.Intercom("boot", intercomProps)
+  }
+}
+
 function loadIntercom({
   appId = APP_ID,
-  callBack,
   delay = 0,
-  email = null,
-  name,
   initWindow = true,
-  scriptType = "async",
-  scriptInitDelay = 0,
   ...extra
 }: IntercomProps) {
   setAppId(appId)
@@ -63,68 +75,32 @@ function loadIntercom({
 
       window.Intercom = intercomBase
 
-      const loadScript = function () {
-        const intercomLoaded = document.querySelector(
-          `script[src="${widgetCdn}${appId}"]`
-        )
+      const { callBack, scriptType, email, name, ...stripedProps } = extra || {}
 
-        if (!intercomLoaded) {
-          const intercomScript = document.createElement("script")
-          intercomScript.type = "text/javascript"
-
-          if (scriptType) {
-            intercomScript[scriptType] = true
-          }
-          intercomScript.src = `${widgetCdn}${appId}`
-          const initialScript = document.getElementsByTagName("script")[0]
-
-          if (initialScript && initialScript.parentNode) {
-            initialScript.parentNode.insertBefore(intercomScript, initialScript)
-          }
-
-          if (initWindow) {
-            const intercomProps = Object.assign(
-              {},
-              {
-                email: email || null,
-                appId,
-                name
-              },
-              extra
-            )
-
-            delay
-              ? setTimeout(() => initIntercomWindow(intercomProps), delay)
-              : initIntercomWindow(intercomProps)
-          }
-        } else {
-          console.log("intercom script already inserted")
-        }
-
-        typeof callBack === "function" && callBack()
+      const baseLoadProps = {
+        src: `${widgetCdn}${appId}`,
+        callBack,
+        initWindow,
+        initIntercomWindow,
+        scriptType
       }
-      scriptInitDelay ? setTimeout(loadScript, scriptInitDelay) : loadScript()
+
+      const updateProps = Object.assign(
+        {},
+        {
+          email: email || null,
+          appId,
+          name
+        },
+        stripedProps
+      )
+
+      delay
+        ? setTimeout(() => loadScript(baseLoadProps, updateProps), delay)
+        : loadScript(baseLoadProps, updateProps)
     } else {
       console.warn("intercom failed to load")
     }
-  }
-}
-
-function initIntercomWindow({ appId = APP_ID, ...otherProps }): void {
-  const intercomProps = Object.assign(
-    {},
-    {
-      app_id: appId
-    },
-    otherProps
-  )
-
-  if (hasIntercom()) {
-    if (window.intercomSettings && !window.intercomSettings.app_id) {
-      window.intercomSettings = intercomProps
-    }
-
-    window.Intercom("boot", intercomProps)
   }
 }
 
