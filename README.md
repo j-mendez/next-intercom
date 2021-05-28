@@ -1,6 +1,6 @@
 # next-intercom
 
-[![next-intercom](https://circleci.com/gh/A11yWatch/next-intercom.svg?style=svg)](https://circleci.com/gh/A11yWatch/next-intercom)[![Maintainability](https://api.codeclimate.com/v1/badges/422f08689baacea0631c/maintainability)](https://codeclimate.com/github/A11yWatch/next-intercom/maintainability)[![codecov](https://codecov.io/gh/A11yWatch/next-intercom/branch/master/graph/badge.svg?token=MBV2LGQO3J)](https://codecov.io/gh/A11yWatch/next-intercom)
+[![next-intercom](https://circleci.com/gh/j-mendez/next-intercom.svg?style=svg)](https://circleci.com/gh/j-mendez/next-intercom)[![Maintainability](https://api.codeclimate.com/v1/badges/422f08689baacea0631c/maintainability)](https://codeclimate.com/github/j-mendez/next-intercom/maintainability)[![codecov](https://codecov.io/gh/j-mendez/next-intercom/branch/master/graph/badge.svg?token=MBV2LGQO3J)](https://codecov.io/gh/j-mendez/next-intercom)
 
 create intercom chat composer in any browser or on the server using javascript. Keep messager up across SSR pages. Easy drop in for Next.js
 Extra configuration for priority adjustments to keep the main thread unblocked.
