@@ -1,51 +1,54 @@
-import type { IntercomProps, ScriptType } from "./types"
-import { loadScript } from "./load-script"
-import { hasIntercom } from "./has-intercom"
+import type { IntercomProps } from "./types";
+import { loadScript } from "./load-script";
+import { hasIntercom } from "./has-intercom";
 
-let APP_ID = ""
-const widgetCdn = "https://widget.intercom.io/widget/"
+let APP_ID = "";
+const widgetCdn = "https://widget.intercom.io/widget/";
 
 function setAppId(id: string): void {
   if (id) {
-    APP_ID = id
+    APP_ID = id;
   }
 }
 
 function updateIntercom(event: string = "update", settings: any = null): void {
-  hasIntercom() && window.Intercom(event, settings)
+  hasIntercom() && window.Intercom(event, settings);
 }
 
 function trackEvent(type: string, metadata: any = null): void {
-  hasIntercom() && window.Intercom("trackEvent", type, metadata)
+  hasIntercom() && window.Intercom("trackEvent", type, metadata);
 }
 
 async function createIntercomSSR(appId: string = APP_ID): Promise<string> {
+  let script = "";
   try {
-    const dataSource = await fetch(`${widgetCdn}${appId}`)
-    const scriptBody = await dataSource.text()
+    const dataSource = await fetch(`${widgetCdn}${appId}`);
+    const scriptBody = await dataSource.text();
 
-    return `<script type="text/javascript" async="true">${scriptBody}</script>`
+    script = `<script type="text/javascript" async="true">${scriptBody}</script>`;
   } catch (error) {
-    console.error(error)
-    return error
+    console.error(error);
   }
+
+  return script;
 }
 
 function initIntercomWindow({ appId = APP_ID, ...otherProps }): void {
   const intercomProps = Object.assign(
     {},
     {
-      app_id: appId
+      api_base: "https://api-iam.intercom.io",
+      app_id: appId,
     },
     otherProps
-  )
+  );
 
   if (hasIntercom()) {
     if (window.intercomSettings && !window.intercomSettings.app_id) {
-      window.intercomSettings = intercomProps
+      window.intercomSettings = intercomProps;
     }
 
-    window.Intercom("boot", intercomProps)
+    window.Intercom("boot", intercomProps);
   }
 }
 
@@ -55,64 +58,65 @@ function loadIntercom({
   initWindow = true,
   ...extra
 }: IntercomProps) {
-  setAppId(appId)
+  setAppId(appId);
 
   if (extra.ssr) {
-    return createIntercomSSR(appId)
+    return createIntercomSSR(appId);
   } else if (typeof window !== "undefined") {
     if (typeof window.Intercom === "function") {
-      updateIntercom("reattach_activator")
-      updateIntercom("update", window.intercomSettings)
+      updateIntercom("reattach_activator");
+      updateIntercom("update", window.intercomSettings);
     } else if (typeof document !== "undefined") {
       const intercomBase: any = function () {
-        intercomBase.c(arguments)
-      }
+        intercomBase.c(arguments);
+      };
 
-      intercomBase.q = []
+      intercomBase.q = [];
       intercomBase.c = function (args) {
-        intercomBase.q.push(args)
-      }
+        intercomBase.q.push(args);
+      };
 
-      window.Intercom = intercomBase
+      window.Intercom = intercomBase;
 
-      const { callBack, scriptType, email, name, ...stripedProps } = extra || {}
+      const { callBack, scriptType, email, name, ...stripedProps } =
+        extra || {};
 
       const baseLoadProps = {
         src: `${widgetCdn}${appId}`,
         callBack,
         initWindow,
         initIntercomWindow,
-        scriptType
-      }
+        scriptType,
+      };
 
       const updateProps = Object.assign(
         {},
         {
           email: email || null,
           appId,
-          name
+          name,
         },
         stripedProps
-      )
+      );
 
-      delay
-        ? setTimeout(() => loadScript(baseLoadProps, updateProps), delay)
-        : loadScript(baseLoadProps, updateProps)
+      const onLoadScript = () => loadScript(baseLoadProps, updateProps);
+
+      delay ? setTimeout(onLoadScript, delay) : onLoadScript();
     } else {
-      console.warn("intercom failed to load")
+      console.warn("intercom failed to load");
     }
   }
 }
 
 function showIntercomWindow(): void {
-  hasIntercom() && window.Intercom("show")
+  hasIntercom() && window.Intercom("show");
 }
 
 function shutdownIntercom(): void {
   if (hasIntercom()) {
-    window.Intercom("shutdown")
-    delete window.Intercom
-    delete window.intercomSettings
+    window.Intercom("shutdown");
+    delete window.Intercom;
+    delete window.intercomSettings;
   }
 }
 
@@ -125,5 +129,5 @@ export {
   initIntercomWindow,
   showIntercomWindow,
   shutdownIntercom,
-  APP_ID
-}
+  APP_ID,
+};
