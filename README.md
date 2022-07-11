@@ -65,17 +65,27 @@ const { shutdownIntercom } = require("next-intercom");
 shutdownIntercom();
 ```
 
+Add events to Intercom.
+
+```ts
+const { updateIntercom } = require("next-intercom");
+
+updateIntercom("onShow", function newEvent() {
+  console.log("composer opened!");
+});
+```
+
 Track an Intercom event.
 
 ```typescript
 const { trackEvent } = require("next-intercom");
 
 var metadata = {
-  invitee_email: 'pi@example.org',
-  invite_code: 'ADDAFRIEND'
+  invitee_email: "pi@example.org",
+  invite_code: "ADDAFRIEND",
 };
 
-trackEvent('invited-friend', metadata)
+trackEvent("invited-friend", metadata);
 ```
 
 ## About
