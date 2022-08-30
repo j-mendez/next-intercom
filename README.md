@@ -12,7 +12,7 @@ Extra configuration for priority adjustments to keep the main thread unblocked.
 ## How to use
 
 On the client or you can use the script on the server like Next.js using the ssr toggle.
-If your using Next.js you can simply just add the `process.browser` for ssr to render intercom SSR and have it loaded initally.
+If you're using Next.js you can simply just add the `process.browser` for ssr to render intercom SSR and have it loaded initally.
 
 ```typescript
 const { loadIntercom, initIntercomWindow } = require("next-intercom");
