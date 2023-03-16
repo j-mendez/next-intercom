@@ -30,7 +30,7 @@ loadIntercom({
 });
 
 // If init was set to false initiate the window when needed
-initIntercomWindow({ appId: "myintercomappid", email: "someEmail@gmail.com" });
+initIntercomWindow({ appId: "myintercomappid", email: "something@email.com", api_base: "https://api-iam.intercom.io" }); // api_base is optional: If on EU servers use `https://api.eu.intercom.io`
 ```
 
 example using on the server
